@@ -33,14 +33,12 @@ struct DracoCollection<T> {
 
 // TODO: Can we assume data type is Int8?
 public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
-  var stride: Int = 0
-  
   var indicesData: Data!
   var positionsData: Data!
-  var normalsData: Data? = nil
-  var colorsData: Data? = nil
-  var textureCoordsData: Data? = nil
-  var weightsData: Data? = nil
+  var normalsData: Data?
+  var colorsData: Data?
+  var textureCoordinatesData: Data?
+  var weightsData: Data?
 
   let success = data.withUnsafeBytes { rawBufferPointer -> Bool in
     guard let pointer = rawBufferPointer.bindMemory(to: Int8.self).baseAddress else {
@@ -50,11 +48,10 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
     var positions: DracoCollection<Float> = .init()
     var indices: DracoCollection<UInt32> = .init()
 
-//    var normals: DracoCollection<Float> = .init()
-//    var colors: DracoCollection<Float> = .init()
-//    var textureCoordinates: DracoCollection<Float> = .init()
-//
-//    // TODO: Support weights
+    var normals: DracoCollection<Float> = .init()
+    var colors: DracoCollection<Float> = .init()
+    var textureCoordinates: DracoCollection<Float> = .init()
+    var weights: DracoCollection<Float> = .init()
 
     let decodeSuccess = DracoDecompressObjc.decompressDracoBuffer(
       pointer,
@@ -62,9 +59,16 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
       &positions.decodedElements,
       &positions.count,
       &indices.decodedElements,
-      &indices.count
+      &indices.count,
+      &normals.decodedElements,
+      &normals.count,
+      &colors.decodedElements,
+      &colors.count,
+      &textureCoordinates.decodedElements,
+      &textureCoordinates.count,
+      &weights.decodedElements,
+      &weights.count
     )
-
 
     guard let _positionsData = positions.data(), let _indicesData = indices.data() else {
       return false
@@ -72,6 +76,11 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
 
     positionsData = _positionsData
     indicesData = _indicesData
+
+    normalsData = normals.data()
+    colorsData = colors.data()
+    textureCoordinatesData = textureCoordinates.data()
+    weightsData = weights.data()
 
     guard decodeSuccess else {
       return false
@@ -89,7 +98,7 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
     positions: positionsData,
     normals: normalsData,
     colors: colorsData,
-    textureCoordinates: textureCoordsData,
+    textureCoordinates: textureCoordinatesData,
     weights: weightsData
   )
 }
