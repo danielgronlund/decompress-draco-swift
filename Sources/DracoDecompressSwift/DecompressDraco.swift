@@ -8,6 +8,7 @@ public struct DracoDecodingResult {
   public let colors: Data?
   public let textureCoordinates: Data?
   public let weights: Data?
+  public let joints: Data?
 }
 
 public enum DracoDecodingError: Error {
@@ -23,11 +24,11 @@ struct DracoCollection<T> {
       return nil
     }
 
-    return Data(bytes: decodedElements, count: count * MemoryLayout<T>.size)
+    return Data(bytes: decodedElements, count: count * MemoryLayout<T>.stride)
   }
 
   var elementSize: Int {
-    MemoryLayout<T>.size
+    MemoryLayout<T>.stride
   }
 }
 
@@ -39,6 +40,7 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
   var colorsData: Data?
   var textureCoordinatesData: Data?
   var weightsData: Data?
+  var jointsData: Data?
 
   let success = data.withUnsafeBytes { rawBufferPointer -> Bool in
     guard let pointer = rawBufferPointer.bindMemory(to: Int8.self).baseAddress else {
@@ -52,6 +54,7 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
     var colors: DracoCollection<Float> = .init()
     var textureCoordinates: DracoCollection<Float> = .init()
     var weights: DracoCollection<Float> = .init()
+    var joints: DracoCollection<UInt32> = .init()
 
     let decodeSuccess = DracoDecompressObjc.decompressDracoBuffer(
       pointer,
@@ -67,7 +70,9 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
       &textureCoordinates.decodedElements,
       &textureCoordinates.count,
       &weights.decodedElements,
-      &weights.count
+      &weights.count,
+      &joints.decodedElements,
+      &joints.count
     )
 
     guard let _positionsData = positions.data(), let _indicesData = indices.data() else {
@@ -81,6 +86,7 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
     colorsData = colors.data()
     textureCoordinatesData = textureCoordinates.data()
     weightsData = weights.data()
+    jointsData = joints.data()
 
     guard decodeSuccess else {
       return false
@@ -99,6 +105,7 @@ public func decompressDracoBuffer(_ data: Data) throws -> DracoDecodingResult {
     normals: normalsData,
     colors: colorsData,
     textureCoordinates: textureCoordinatesData,
-    weights: weightsData
+    weights: weightsData,
+    joints: jointsData
   )
 }
