@@ -11,7 +11,7 @@ let package = Package(
       targets: ["DracoDecompressSwift"]),
   ],
   dependencies: [
-    .package(url: "git@github.com:danielgronlund/draco.git", branch: "swift-package-manager-slim")
+    .package(url: "git@github.com:danielgronlund/draco.git", revision: "a16d61bd471e8132501f82d712a8ae88167023b1")
   ],
   targets: [
     .target(
