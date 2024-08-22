@@ -1,0 +1,5 @@
+module DracoDecompressObjc {
+    header "DracoDecompressObjc/DracoDecompressObjc.h"
+    export *
+    link "Draco"
+}
