@@ -1,11 +1,12 @@
 {
-  "originHash" : "f2b55ece635ade431d682daed1bc688d13deaf9163f2724096ea6948cebc0305",
+  "originHash" : "94b35f6d9078f8447590b8c895c031a48de8db52f024a9e02f7c17d0949f9dc6",
   "pins" : [
     {
       "identity" : "draco",
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:danielgronlund/draco.git",
       "state" : {
+        "branch" : "spm-0.0.1",
         "revision" : "a16d61bd471e8132501f82d712a8ae88167023b1"
       }
     }
