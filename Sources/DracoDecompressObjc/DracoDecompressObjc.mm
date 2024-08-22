@@ -3,9 +3,9 @@
 
 #if __has_include("draco/compression/decode.h")
 
-#include "draco/compression/decode.h"
-#include "draco/core/decoder_buffer.h"
-#include "draco/mesh/mesh.h"
+#import <draco/compression/decode.h>
+#import <draco/core/decoder_buffer.h>
+#import <draco/mesh/mesh.h>
 
 bool decompressDracoBuffer(
                            const char* buffer,

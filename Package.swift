@@ -4,24 +4,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "DracoDecompressSwift",
-    products: [
-        .library(
-            name: "DracoDecompressSwift",
-            targets: ["DracoDecompressSwift"]),
-    ],
-    dependencies: [
-      .package(url: "git@github.com:danielgronlund/DracoSwift.git", exact: .init(1, 0, 0))
-    ],
-    targets: [
-        .target(
-          name: "DracoDecompressSwift",
-          dependencies: ["DracoDecompressObjc"],
-          cSettings: [.headerSearchPath("Include/")]
-        ),
-        .target(name: "DracoDecompressObjc",
-                dependencies: [.product(name: "DracoSwift", package: "DracoSwift")],
-                publicHeadersPath: "Include"),
-    ],
-    cxxLanguageStandard: .cxx17
+  name: "DracoDecompressSwift",
+  products: [
+    .library(
+      name: "DracoDecompressSwift",
+      targets: ["DracoDecompressSwift"]),
+  ],
+  dependencies: [
+    .package(url: "git@github.com:danielgronlund/draco.git", branch: "swift-package-manager-slim")
+  ],
+  targets: [
+    .target(
+      name: "DracoDecompressSwift",
+      dependencies: ["DracoDecompressObjc"],
+      cSettings: [.headerSearchPath("Include/")]
+    ),
+    .target(name: "DracoDecompressObjc",
+            dependencies: [.product(name: "draco", package: "draco")],
+            publicHeadersPath: "Include"),
+  ],
+  cxxLanguageStandard: .cxx17
 )
